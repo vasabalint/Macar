@@ -8,4 +8,6 @@ export function calculateWeightedAverageCost(
   const incQty = Math.max(0, incomingQuantity);
   if (currentQty + incQty <= 0) return incomingUnitCost;
 
+  const totalValue = (currentQty * existingUnitCost) + (incQty * incomingUnitCost);
+  return Math.round((totalValue / (currentQty + incQty)) * 100) / 100;
 }
