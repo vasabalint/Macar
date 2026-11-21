@@ -14,6 +14,18 @@ function canAccess(user: User, item: MenuItem): boolean {
 	return user.role === 'admin' || item.ownerId === user.id;
 }
 
+// Names are unique within an owner's menu, regardless of case or whitespace.
+function hasDuplicateName(name: string, ownerId: string, excludeId?: string): boolean {
+	const normalize = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();
+	const normalizedName = normalize(name);
+	return menuItems.some(
+		(item) =>
+			item.ownerId === ownerId &&
+			item.id !== excludeId &&
+			normalize(item.name) === normalizedName
+	);
+}
+
 function parsePositiveInt(value: unknown): number | null {
 	if (typeof value !== 'string' || !/^\d+$/.test(value)) return null;
 	const parsed = Number(value);
@@ -127,6 +139,10 @@ router.post('/', (req, res) => {
 		);
 	}
 
+	if (hasDuplicateName(result.value.name, req.user!.id)) {
+		return sendError(res, 409, 'CONFLICT', 'A menu item with this name already exists for this owner.');
+	}
+
 	const now = new Date().toISOString();
 	const item: MenuItem = {
 		id: generateMenuItemId(),
@@ -157,6 +173,10 @@ router.put('/:id', (req, res) => {
 			'The request contains invalid or missing fields.',
 			result.details
 		);
+	}
+
+	if (hasDuplicateName(result.value.name, item.ownerId, item.id)) {
+		return sendError(res, 409, 'CONFLICT', 'A menu item with this name already exists for this owner.');
 	}
 
 	Object.assign(item, result.value, { updatedAt: new Date().toISOString() });
