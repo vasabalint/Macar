@@ -116,7 +116,8 @@ Output of `git shortlog -sn --all`:
     16	vasabalint
     11	bilalhasanov2005
      5	Bilal Hasanov
-     10	bismaeel18973
+     5	basamismaeel070-afk
+     5	bismaeel18973
 ```
 
 ## Demo video
