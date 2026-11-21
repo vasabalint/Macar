@@ -122,4 +122,4 @@ Output of `git shortlog -sn --all`:
 
 ## Demo video
 
-Link coming soon.
+Youtube link: https://youtu.be/-fA7Fr0LIE0
