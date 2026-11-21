@@ -53,7 +53,7 @@ GET /api/v1/greeting
 ```html
 <!DOCTYPE html>
 <html lang="en">
-  <head><title>Macar — Restaurant management API</title></head>
+  <head><title>Macar: Restaurant management API</title></head>
   <body><!-- Greeting page content --></body>
 </html>
 ```
