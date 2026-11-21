@@ -77,12 +77,12 @@ export const renderGreetingPage = (endpointDetails = { styles: '', content: '' }
       <nav aria-label="Main navigation">
         <a href="#endpoints">Endpoints</a>
         <a href="#team">The team</a>
-        <span class="status"><span class="dot" aria-hidden="true"></span>API running</span>
+        <span class="status"><span class="dot" aria-hidden="true"></span>API running (v1)</span>
       </nav>
     </header>
     <main id="main">
       <section class="hero" aria-labelledby="welcome">
-        <span class="status"><span class="dot" aria-hidden="true"></span>API running</span>
+        <span class="status"><span class="dot" aria-hidden="true"></span>API running (v1)</span>
         <div>
           <h1 id="welcome">Welcome to Macar.</h1>
           <div class="intro">
@@ -108,9 +108,9 @@ export const renderGreetingPage = (endpointDetails = { styles: '', content: '' }
       <section id="team" class="section" aria-labelledby="team-title">
         <div class="section-head"><h2 id="team-title">Team members</h2></div>
         <div class="team">
-          <article class="member"><h3>Bilal Hasanov</h3><dl><dt>Student ID</dt><dd>17533</dd><dt>Contribution</dt><dd>Strict validation, duplicate checks, structured error responses, token parsing fixes, and the HTML greeting page with endpoint examples.</dd></dl></article>
-          <article class="member"><h3>Basam Ismaeel</h3><dl><dt>Student ID</dt><dd>18973</dd><dt>Contribution</dt><dd>Express and TypeScript setup, mock users and menu data, bearer authentication, CRUD endpoints, and ownership checks.</dd></dl></article>
-          <article class="member"><h3>Balint Vasa</h3><dl><dt>Student ID</dt><dd>27721</dd><dt>Contribution</dt><dd>Initial project structure, recipe cost and menu-item economics calculations, and weighted average inventory costs.</dd></dl></article>
+          <article class="member"><h3>Bilal Hasanov</h3><dl><dt>Student ID</dt><dd>17533</dd><dt>Contribution</dt><dd>Strict validation, duplicate checks, error handling, automated tests, and the HTML greeting page with endpoint examples.</dd></dl></article>
+          <article class="member"><h3>Basam Ismaeel</h3><dl><dt>Student ID</dt><dd>18973</dd><dt>Contribution</dt><dd>API setup, mock data, authentication, menu-item CRUD endpoints, and ownership checks.</dd></dl></article>
+          <article class="member"><h3>Balint Vasa</h3><dl><dt>Student ID</dt><dd>27721</dd><dt>Contribution</dt><dd>Initial project structure, recipe costing, menu-item profitability, and inventory cost calculations.</dd></dl></article>
         </div>
       </section>
     </main>
