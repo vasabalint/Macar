@@ -14,6 +14,26 @@ export interface ErrorDetail {
 	message: string;
 }
 
+export interface ListMeta {
+	total: number;
+	page: number;
+	perPage: number;
+}
+
+// Sends a success response using the shared envelope:
+// { success: true, message, data, meta? }
+export function sendSuccess(
+	res: Response,
+	status: number,
+	message: string,
+	data: unknown,
+	meta?: ListMeta
+): Response {
+	return res.status(status).json(
+		meta ? { success: true, message, data, meta } : { success: true, message, data }
+	);
+}
+
 // Sends an error using the shared envelope:
 // { success: false, error: { code, message, details? } }
 export function sendError(
