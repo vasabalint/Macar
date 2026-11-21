@@ -98,17 +98,15 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md) for the responsibilities of each member.
 
 ### Commit counts
 
-Output of `git shortlog -sn --all` when this draft was written, at commit `ec54bbc`:
+Output of `git shortlog -sn --all`:
 
 ```text
     16	vasabalint
-     9	bilalhasanov2005
+    11	bilalhasanov2005
+     5	Bilal Hasanov
      5	basamismaeel070-afk
      5	bismaeel18973
-     3	Bilal Hasanov
 ```
-
-The command groups commits by recorded author name, so one person may appear under more than one name. These are the names reported by Git; they are not a count of team members. Refresh this output after the final commits before submission.
 
 ## Demo video
 
