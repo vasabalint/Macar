@@ -1,0 +1,118 @@
+# Send requests individually with a REST client, or copy them into Postman.
+# Start a fresh server for the CRUD sequence. If the created ID differs from
+# item_301, replace item_301 in the later requests with data.id from POST.
+
+### Public greeting: 200 HTML
+GET http://localhost:3000/api/v1/greeting
+
+### User A's list: 200, initially 3 items
+GET http://localhost:3000/api/v1/menu-items
+Authorization: Bearer user-a-token
+
+### Filter and paginate: 200, initially Lentil Soup
+GET http://localhost:3000/api/v1/menu-items?page=1&perPage=10&category=starter
+Authorization: Bearer user-a-token
+
+### Read User A's item: 200
+GET http://localhost:3000/api/v1/menu-items/item_101
+Authorization: Bearer user-a-token
+
+### Create: 201, save data.id for the following requests
+POST http://localhost:3000/api/v1/menu-items
+Authorization: Bearer user-a-token
+Content-Type: application/json
+
+{
+  "name": "Tomato Soup",
+  "category": "starter",
+  "sellingPrice": 7,
+  "description": "Tomato soup with toasted bread.",
+  "isAvailable": true
+}
+
+### Read the created item: 200
+GET http://localhost:3000/api/v1/menu-items/item_301
+Authorization: Bearer user-a-token
+
+### Replace editable fields: 200
+PUT http://localhost:3000/api/v1/menu-items/item_301
+Authorization: Bearer user-a-token
+Content-Type: application/json
+
+{
+  "name": "Tomato Soup",
+  "category": "starter",
+  "sellingPrice": 8,
+  "description": "Tomato soup with toasted bread.",
+  "isAvailable": false
+}
+
+### Delete the created item: 200 with data: null
+DELETE http://localhost:3000/api/v1/menu-items/item_301
+Authorization: Bearer user-a-token
+
+### Deleted item: 404
+GET http://localhost:3000/api/v1/menu-items/item_301
+Authorization: Bearer user-a-token
+
+### Missing token: 401
+GET http://localhost:3000/api/v1/menu-items
+
+### Invalid token: 401
+GET http://localhost:3000/api/v1/menu-items
+Authorization: Bearer invalid-token
+
+### Extra token text: 401
+GET http://localhost:3000/api/v1/menu-items
+Authorization: Bearer admin-token extra
+
+### User A cannot read User B's item: 404
+GET http://localhost:3000/api/v1/menu-items/item_201
+Authorization: Bearer user-a-token
+
+### User B cannot read User A's item: 404
+GET http://localhost:3000/api/v1/menu-items/item_101
+Authorization: Bearer user-b-token
+
+### Administrator can read User B's item: 200
+GET http://localhost:3000/api/v1/menu-items/item_201
+Authorization: Bearer admin-token
+
+### Non-existent seed ID: 404
+GET http://localhost:3000/api/v1/menu-items/item_999
+Authorization: Bearer admin-token
+
+### Invalid fields: 400 with details for name, price, and availability
+POST http://localhost:3000/api/v1/menu-items
+Authorization: Bearer user-a-token
+Content-Type: application/json
+
+{
+  "name": "ab",
+  "category": "starter",
+  "sellingPrice": -1,
+  "isAvailable": "false"
+}
+
+### Duplicate of a seeded name: 409
+POST http://localhost:3000/api/v1/menu-items
+Authorization: Bearer user-a-token
+Content-Type: application/json
+
+{
+  "name": " LENTIL  SOUP ",
+  "category": "starter",
+  "sellingPrice": 7
+}
+
+### Unsupported method: 405 with Allow header
+PATCH http://localhost:3000/api/v1/menu-items/item_101
+Authorization: Bearer admin-token
+
+### Invalid pagination: 400
+GET http://localhost:3000/api/v1/menu-items?perPage=51
+Authorization: Bearer user-a-token
+
+### Allowed methods: 204 with Allow header
+OPTIONS http://localhost:3000/api/v1/menu-items
+Authorization: Bearer admin-token
