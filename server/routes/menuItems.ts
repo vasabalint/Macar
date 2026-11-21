@@ -1,7 +1,8 @@
-import { Router } from 'express';
-import { menuItems } from '../data/menuItems';
+import { Request, Response, Router } from 'express';
+import { generateMenuItemId, menuItems } from '../data/menuItems';
 import { MENU_CATEGORIES, MenuCategory, MenuItem, User } from '../types';
 import { ErrorDetail, sendError, sendSuccess } from '../utils/respond';
+import { validateMenuItemBody } from '../validation/menuItem';
 
 const router = Router();
 
@@ -98,5 +99,125 @@ router.get('/:id', (req, res) => {
 
 	return sendSuccess(res, 200, 'Menu item retrieved successfully.', item);
 });
+
+// Finds an item the current user may access, or sends 404 and returns undefined.
+function findAccessibleItem(req: Request, res: Response): MenuItem | undefined {
+	const item = menuItems.find((candidate) => candidate.id === req.params.id);
+
+	if (!item || !canAccess(req.user!, item)) {
+		sendError(res, 404, 'NOT_FOUND', `Menu item with id "${req.params.id}" was not found.`);
+		return undefined;
+	}
+
+	return item;
+}
+
+// The same owner cannot have two menu items with the same name.
+function hasDuplicateName(ownerId: string, name: string, ignoreId?: string): boolean {
+	const normalized = name.toLowerCase();
+	return menuItems.some(
+		(item) =>
+			item.ownerId === ownerId &&
+			item.id !== ignoreId &&
+			item.name.toLowerCase() === normalized
+	);
+}
+
+function sendDuplicateName(res: Response, name: string) {
+	return sendError(
+		res,
+		409,
+		'CONFLICT',
+		`A menu item named "${name}" already exists for this owner.`
+	);
+}
+
+// POST /api/v1/menu-items
+// The new item is owned by the user who creates it.
+router.post('/', (req, res) => {
+	const result = validateMenuItemBody(req.body);
+
+	if (!result.valid) {
+		return sendError(
+			res,
+			400,
+			'VALIDATION_ERROR',
+			'The request contains invalid or missing fields.',
+			result.details
+		);
+	}
+
+	const user = req.user!;
+
+	if (hasDuplicateName(user.id, result.value.name)) {
+		return sendDuplicateName(res, result.value.name);
+	}
+
+	const now = new Date().toISOString();
+	const item: MenuItem = {
+		id: generateMenuItemId(),
+		...result.value,
+		ownerId: user.id,
+		createdAt: now,
+		updatedAt: now,
+	};
+
+	menuItems.push(item);
+
+	return sendSuccess(res, 201, 'Menu item created successfully.', item);
+});
+
+// PUT /api/v1/menu-items/:id
+// Replaces the editable fields of an item. Owner and timestamps are kept.
+router.put('/:id', (req, res) => {
+	const item = findAccessibleItem(req, res);
+	if (!item) return;
+
+	const result = validateMenuItemBody(req.body);
+
+	if (!result.valid) {
+		return sendError(
+			res,
+			400,
+			'VALIDATION_ERROR',
+			'The request contains invalid or missing fields.',
+			result.details
+		);
+	}
+
+	if (hasDuplicateName(item.ownerId, result.value.name, item.id)) {
+		return sendDuplicateName(res, result.value.name);
+	}
+
+	Object.assign(item, result.value, { updatedAt: new Date().toISOString() });
+
+	return sendSuccess(res, 200, 'Menu item updated successfully.', item);
+});
+
+// DELETE /api/v1/menu-items/:id
+router.delete('/:id', (req, res) => {
+	const item = findAccessibleItem(req, res);
+	if (!item) return;
+
+	menuItems.splice(menuItems.indexOf(item), 1);
+
+	return sendSuccess(res, 200, 'Menu item deleted successfully.', null);
+});
+
+// Any other HTTP method on these paths is not supported.
+function methodNotAllowed(allowed: string) {
+	return (req: Request, res: Response) => {
+		res.set('Allow', allowed);
+		return sendError(
+			res,
+			405,
+			'METHOD_NOT_ALLOWED',
+			`Method ${req.method} is not allowed on this endpoint. Allowed: ${allowed}.`
+		);
+	};
+}
+
+router.all('/', methodNotAllowed('GET, POST'));
+router.all('/:id', methodNotAllowed('GET, PUT, DELETE'));
 
 export default router;
