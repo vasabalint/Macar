@@ -20,7 +20,8 @@ async function serve(t, app) {
       status: response.status,
       headers: response.headers,
       text,
-      body: text ? JSON.parse(text) : undefined,
+      body: text && response.headers.get('content-type')?.includes('application/json')
+        ? JSON.parse(text) : undefined,
     };
   };
 }
