@@ -26,9 +26,10 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 		);
 	}
 
-	const [scheme, token] = header.trim().split(/\s+/);
+	const parts = header.trim().split(/\s+/);
+	const [scheme, token] = parts;
 
-	if (!scheme || scheme.toLowerCase() !== 'bearer' || !token) {
+	if (parts.length !== 2 || scheme.toLowerCase() !== 'bearer' || !token) {
 		return sendError(
 			res,
 			401,
