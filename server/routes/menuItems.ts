@@ -1,7 +1,8 @@
-import { Router } from 'express';
-import { menuItems } from '../data/menuItems';
+import { Request, Response, Router } from 'express';
+import { generateMenuItemId, menuItems } from '../data/menuItems';
 import { MENU_CATEGORIES, MenuCategory, MenuItem, User } from '../types';
 import { ErrorDetail, sendError, sendSuccess } from '../utils/respond';
+import { validateMenuItemBody } from '../validation/menuItem';
 
 const router = Router();
 
@@ -97,6 +98,80 @@ router.get('/:id', (req, res) => {
 	}
 
 	return sendSuccess(res, 200, 'Menu item retrieved successfully.', item);
+});
+
+// Finds an item the current user may access, or sends 404 and returns undefined.
+function findAccessibleItem(req: Request, res: Response): MenuItem | undefined {
+	const item = menuItems.find((candidate) => candidate.id === req.params.id);
+
+	if (!item || !canAccess(req.user!, item)) {
+		sendError(res, 404, 'NOT_FOUND', `Menu item with id "${req.params.id}" was not found.`);
+		return undefined;
+	}
+
+	return item;
+}
+
+// POST /api/v1/menu-items
+// The new item is owned by the user who creates it.
+router.post('/', (req, res) => {
+	const result = validateMenuItemBody(req.body);
+
+	if (!result.valid) {
+		return sendError(
+			res,
+			400,
+			'VALIDATION_ERROR',
+			'The request contains invalid or missing fields.',
+			result.details
+		);
+	}
+
+	const now = new Date().toISOString();
+	const item: MenuItem = {
+		id: generateMenuItemId(),
+		...result.value,
+		ownerId: req.user!.id,
+		createdAt: now,
+		updatedAt: now,
+	};
+
+	menuItems.push(item);
+
+	return sendSuccess(res, 201, 'Menu item created successfully.', item);
+});
+
+// PUT /api/v1/menu-items/:id
+// Replaces the editable fields of an item. Owner and timestamps are kept.
+router.put('/:id', (req, res) => {
+	const item = findAccessibleItem(req, res);
+	if (!item) return;
+
+	const result = validateMenuItemBody(req.body);
+
+	if (!result.valid) {
+		return sendError(
+			res,
+			400,
+			'VALIDATION_ERROR',
+			'The request contains invalid or missing fields.',
+			result.details
+		);
+	}
+
+	Object.assign(item, result.value, { updatedAt: new Date().toISOString() });
+
+	return sendSuccess(res, 200, 'Menu item updated successfully.', item);
+});
+
+// DELETE /api/v1/menu-items/:id
+router.delete('/:id', (req, res) => {
+	const item = findAccessibleItem(req, res);
+	if (!item) return;
+
+	menuItems.splice(menuItems.indexOf(item), 1);
+
+	return sendSuccess(res, 200, 'Menu item deleted successfully.', null);
 });
 
 export default router;
