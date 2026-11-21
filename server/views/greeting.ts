@@ -4,7 +4,7 @@ export const renderGreetingPage = (endpointDetails = { styles: '', content: '' }
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Macar is a restaurant operations and analytics platform in development, covering menus, recipes, inventory, suppliers, sales, and staff schedules. This API prototype focuses on menu-item management.">
-  <title>Macar — Restaurant management API</title>
+  <title>Macar: Restaurant management API</title>
   <style>
     :root { color-scheme: light; --paper: #f7f5ed; --ink: #293529; --muted: #626958; --line: #d7dacb; --orange: #b54224; --olive: #e8ebdb; }
     * { box-sizing: border-box; }
