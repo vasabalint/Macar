@@ -14,7 +14,7 @@ test('greeting is a public HTML page with the required project sections', async 
   assert.match(response.text, /<html lang="en">/);
   assert.match(response.text, /<title>Macar/);
   for (const text of ['restaurant owners and managers', 'Student ID', 'Contribution',
-    'API running', 'v1', '/api/v1/menu-items', '/api/v1/menu-items/:id']) {
+    'API running (v1)', '/api/v1/menu-items', '/api/v1/menu-items/:id']) {
     assert.ok(response.text.includes(text), `Missing page content: ${text}`);
   }
 });
