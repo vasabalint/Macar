@@ -17,7 +17,7 @@ function canAccess(user: User, item: MenuItem): boolean {
 function parsePositiveInt(value: unknown): number | null {
 	if (typeof value !== 'string' || !/^\d+$/.test(value)) return null;
 	const parsed = Number(value);
-	return parsed >= 1 ? parsed : null;
+	return Number.isSafeInteger(parsed) && parsed >= 1 ? parsed : null;
 }
 
 // GET /api/v1/menu-items?page=1&perPage=10&category=main
@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
 	if (req.query.page !== undefined) {
 		const parsed = parsePositiveInt(req.query.page);
 		if (parsed === null) {
-			details.push({ field: 'page', message: 'Page must be a whole number of at least 1.' });
+			details.push({ field: 'page', message: 'Page must be a safe whole number of at least 1.' });
 		} else {
 			page = parsed;
 		}
