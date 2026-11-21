@@ -210,4 +210,4 @@ HEAD works on GET routes without returning a body. OPTIONS returns 204 with the 
 | `/menu-items` | GET, HEAD, POST, OPTIONS |
 | `/menu-items/:id` | GET, HEAD, PUT, DELETE, OPTIONS |
 
-See [requests.http](requests.http) for runnable examples, including failure cases.
+See [requests.http](../examples/requests.http) for runnable examples, including failure cases.
