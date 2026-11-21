@@ -108,9 +108,9 @@ export const renderGreetingPage = (endpointDetails = { styles: '', content: '' }
       <section id="team" class="section" aria-labelledby="team-title">
         <div class="section-head"><h2 id="team-title">Team members</h2></div>
         <div class="team">
-          <article class="member"><h3>Bilal Hasanov</h3><dl><dt>Student ID</dt><dd>17533</dd><dt>Contribution</dt><dd>Strict validation, duplicate checks, error handling, automated tests, and the HTML greeting page with endpoint examples.</dd></dl></article>
-          <article class="member"><h3>Basam Ismaeel</h3><dl><dt>Student ID</dt><dd>18973</dd><dt>Contribution</dt><dd>API setup, mock data, authentication, menu-item CRUD endpoints, and ownership checks.</dd></dl></article>
-          <article class="member"><h3>Balint Vasa</h3><dl><dt>Student ID</dt><dd>27721</dd><dt>Contribution</dt><dd>Initial project structure, recipe costing, menu-item profitability, and inventory cost calculations.</dd></dl></article>
+          <article class="member"><h3>Bilal Hasanov</h3><dl><dt>Student ID</dt><dd>17533</dd><dt>Contribution</dt><dd>Worked on validation, duplicate checks, and error handling, and tightened token parsing. Built the greeting page and its endpoint examples, and wrote tests for the API.</dd></dl></article>
+          <article class="member"><h3>Basam Ismaeel</h3><dl><dt>Student ID</dt><dd>18973</dd><dt>Contribution</dt><dd>Set up the backend in Express and TypeScript and added the mock data. Wrote the menu-item CRUD routes, token authentication, and ownership checks, including filtering and pagination.</dd></dl></article>
+          <article class="member"><h3>Balint Vasa</h3><dl><dt>Student ID</dt><dd>27721</dd><dt>Contribution</dt><dd>Started the project structure and wrote the recipe and food-cost calculations. Added menu-item profit calculations and the weighted average cost calculation used for inventory.</dd></dl></article>
         </div>
       </section>
     </main>
