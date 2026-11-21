@@ -3,6 +3,7 @@ import { generateMenuItemId, menuItems } from '../data/menuItems';
 import { MENU_CATEGORIES, MenuCategory, MenuItem, User } from '../types';
 import { ErrorDetail, sendError, sendSuccess } from '../utils/respond';
 import { validateMenuItemBody } from '../validation/menuItem';
+import { methodNotAllowed } from '../middleware/methodNotAllowed';
 
 const router = Router();
 
@@ -193,5 +194,9 @@ router.delete('/:id', (req, res) => {
 
 	return sendSuccess(res, 200, 'Menu item deleted successfully.', null);
 });
+
+// GET handlers also support HEAD through Express. Keep fallbacks after CRUD.
+router.all('/', methodNotAllowed(['GET', 'HEAD', 'POST']));
+router.all('/:id', methodNotAllowed(['GET', 'HEAD', 'PUT', 'DELETE']));
 
 export default router;
