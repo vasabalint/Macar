@@ -66,7 +66,7 @@ curl -H "Authorization: Bearer user-a-token" http://localhost:3000/api/v1/menu-i
 
 In Postman, select **Authorization > Bearer Token** and paste a token. For POST and PUT, select **Body > raw > JSON**.
 
-See [API.md](API.md) for field rules, responses, and errors. [requests.http](requests.http) contains example requests for CRUD, validation, authentication, and ownership checks. You can send them with a REST client that supports `.http` files, or copy them into Postman. They are not sent automatically.
+See [API.md](docs/API.md) for field rules, responses, and errors. [requests.http](examples/requests.http) contains example requests for CRUD, validation, authentication, and ownership checks. You can send them with a REST client that supports `.http` files, or copy them into Postman.
 
 ## Mock data and scope
 
@@ -76,7 +76,19 @@ Data is stored in memory. **All changes reset when the server restarts**, includ
 
 Regular users get 404 when requesting another user's item, so the response does not reveal whether a private item exists. Administrators can read, update, and delete any owner's items. An item created by the administrator belongs to the administrator.
 
-Inventory, sales, staff scheduling, AI summaries, and a persistent database are not connected to this API yet. The root-level food-cost and inventory calculations are separate from the API; the TypeScript build compiles `server/`.
+Inventory, sales, staff scheduling, AI summaries, and a persistent database are not connected to this API yet. Earlier food-cost and inventory calculations are kept in `drafts/business/`. These drafts are separate from the running API; the TypeScript build compiles `server/`.
+
+## Project structure
+
+```text
+server/           API source code and greeting page
+tests/            Automated tests
+docs/             API documentation
+examples/         HTTP requests to try
+drafts/business/  Earlier business-logic drafts
+README.md         Setup and project overview
+CONTRIBUTORS.md   Team members and responsibilities
+```
 
 ## Tests
 
